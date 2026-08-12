@@ -7,22 +7,29 @@ PostgreSQL, Spring Data JPA, Flyway, Spring Security, and Thymeleaf.
 
 - Java 21
 - PostgreSQL
+- Docker (for integration tests)
 
 The Maven Wrapper is included, so a separate Maven installation is not required.
 
 ## Database configuration
 
-Set the following environment variables before starting the application:
+Create a local environment file from the provided template:
 
 ```shell
-export DB_URL=jdbc:postgresql://localhost:5432/tripgo
-export DB_USERNAME=tripgo
-export DB_PASSWORD=your_password
+cp .env.example .env
 ```
 
-`DB_URL` and `DB_USERNAME` default to the local values shown above. `DB_PASSWORD`
-defaults to an empty value for local development and should always be supplied in
-deployed environments.
+Update `.env`, then export its values in the current shell before starting the
+application:
+
+```shell
+set -a
+source .env
+set +a
+```
+
+`DB_URL` and `DB_USERNAME` have local defaults. `DB_PASSWORD` is required in every
+environment; the application fails to start when it is missing.
 
 ## Run locally
 
@@ -36,8 +43,8 @@ deployed environments.
 ./mvnw test
 ```
 
-Tests use an in-memory H2 database in PostgreSQL compatibility mode and do not
-require a running PostgreSQL instance.
+Integration tests start PostgreSQL 17 with Testcontainers, apply all Flyway
+migrations, and require Docker to be running.
 
 ## Build
 
